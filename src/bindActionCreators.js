@@ -8,12 +8,20 @@ function bindActionCreator(actionCreator, dispatch) {
  * may be invoked directly. This is just a convenience method, as you can call
  * `store.dispatch(MyActionCreators.doSomething())` yourself just fine.
  *
+ * 将一个其值是action creators的对象转换为具有相同的key的对象，新对象的每个函数都被封装进一个
+ * `dispatch`调用，以便可以直接调用。这只是一个简便方法，所以可以直接调用
+ * `store.dispatch(MyActionCreators.doSomething())`
+ *
  * For convenience, you can also pass a single function as the first argument,
  * and get a function in return.
+ *
+ * 方便起见，第一个参数也可以是一个函数，同样返回一个函数
  *
  * @param {Function|Object} actionCreators An object whose values are action
  * creator functions. One handy way to obtain it is to use ES6 `import * as`
  * syntax. You may also pass a single function.
+ *
+ * 其值为action creator函数的对象。也可以传递一个函数。
  *
  * @param {Function} dispatch The `dispatch` function available on your Redux
  * store.
@@ -37,6 +45,9 @@ export default function bindActionCreators(actionCreators, dispatch) {
 
   const keys = Object.keys(actionCreators)
   const boundActionCreators = {}
+
+  // 将每一个action creator封装成(...args) => dispatch(actionCreator(...args))
+  // 存储在boundActionCreators中
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
     const actionCreator = actionCreators[key]

@@ -9,6 +9,9 @@
  * (...args) => f(g(h(...args))).
  */
 
+/**
+ * 组合函数
+ */
 export default function compose(...funcs) {
   if (funcs.length === 0) {
     return arg => arg
@@ -18,5 +21,5 @@ export default function compose(...funcs) {
     return funcs[0]
   }
 
-  return funcs.reduce((a, b) => (...args) => a(b(...args)))
+  return funcs.reduce((a, b) => (...args) => a(b(...args)))       // reduce
 }

@@ -89,6 +89,9 @@ function assertReducerShape(reducers) {
  * into a single state object, whose keys correspond to the keys of the passed
  * reducer functions.
  *
+ * 将带有不同reducer函数的对象合为一个单独的reducer函数。它将调用每一个子reducer，
+ * 并将其结果集合到一个单独的状态对象中，其key对应传递过来的reducer函数的key。
+ *
  * @param {Object} reducers An object whose values correspond to different
  * reducer functions that need to be combined into one. One handy way to obtain
  * it is to use ES6 `import * as reducers` syntax. The reducers may never return
@@ -98,19 +101,26 @@ function assertReducerShape(reducers) {
  *
  * @returns {Function} A reducer function that invokes every reducer inside the
  * passed object, and builds a state object with the same shape.
+ *
+ * 返回一个reducer函数
  */
 export default function combineReducers(reducers) {
+  // 获取所有reducer对应的key
   const reducerKeys = Object.keys(reducers)
   const finalReducers = {}
+
+  // 填充finalReducers
   for (let i = 0; i < reducerKeys.length; i++) {
     const key = reducerKeys[i]
 
+    // 非生产环境下，且key对应的reducer为undefined时，给出警告
     if (process.env.NODE_ENV !== 'production') {
       if (typeof reducers[key] === 'undefined') {
         warning(`No reducer provided for key "${key}"`)
       }
     }
 
+    // 如果key对应的reducer为函数，则放入finalReducers中
     if (typeof reducers[key] === 'function') {
       finalReducers[key] = reducers[key]
     }
@@ -143,6 +153,7 @@ export default function combineReducers(reducers) {
 
     let hasChanged = false
     const nextState = {}
+    // 更新action对应的状态
     for (let i = 0; i < finalReducerKeys.length; i++) {
       const key = finalReducerKeys[i]
       const reducer = finalReducers[key]
